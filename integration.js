@@ -10,7 +10,7 @@ const runCompiler = async (programFile) => {
     );
     // console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
-    // return "./tempLoc/tac.txt";
+    return "TestFiles/Main.vm";
   } catch (e) {
     console.error(e);
   }
@@ -23,7 +23,7 @@ const runVirtualMachine = async () => {
     );
     // console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
-    // return "./tempLoc/assembly.txt";
+    return "TestFiles/assembly.asm";
   } catch (e) {
     console.error(e);
   }
@@ -35,7 +35,7 @@ const runAssembler = async () => {
     const { stdout, stderr } = await exec(s);
     // console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
-    // return "./tempLoc/machinecode.txt";
+    return "32-bit-MIPS-Processor/simulation/memory/instruction.mem";
   } catch (e) {
     console.error(e);
   }
@@ -48,7 +48,7 @@ const runProcessor = async () => {
     );
     console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
-    return "./tempLoc/final.txt";
+    return "32-bit-MIPS-Processor/simulation/memory/registers.mem";
   } catch (e) {
     console.error(e);
   }
