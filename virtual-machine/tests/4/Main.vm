@@ -1,0 +1,55 @@
+function Main.gcd 1
+push argument 0
+pop pointer 0
+push argument 1
+push constant 0
+eq
+not
+if-goto MainL1
+push argument 2
+return
+label MainL1
+push argument 2
+push constant 0
+eq
+not
+if-goto MainL2
+push argument 1
+return
+label MainL2
+label MainL3
+push argument 1
+push argument 2
+eq
+not
+not
+if-goto MainL4
+push argument 1
+push argument 2
+gt
+not
+if-goto MainL5
+push argument 1
+push argument 2
+sub
+pop argument 1
+goto MainL6
+label MainL5
+push argument 2
+push argument 1
+sub
+pop argument 2
+label MainL6
+goto MainL3
+label MainL4
+push argument 1
+return
+
+function Main.main 2
+push argument 0
+pop pointer 0
+push constant 2
+push constant 8
+call Main.gcd 2
+pop local 0
+

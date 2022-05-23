@@ -1,0 +1,16 @@
+class Main{
+	int sum_n(int n){
+		int sum;
+        sum = 0;
+        while( n > 0){
+            sum = sum + n;
+            n = n - 1;
+        }
+		return sum;
+	}
+
+	void main () {
+		int sum;
+		sum = sum_n(5);
+	}
+}

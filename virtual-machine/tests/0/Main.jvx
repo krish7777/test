@@ -1,0 +1,25 @@
+class Main
+{
+    void main(){
+        int n;
+        n = 5;
+        Array ar;
+        ar = new Array(n);
+        int i;
+        a[0] = 5;
+        a[1] = 9;
+        a[2] = 4;
+        a[3] = 2;
+        a[4] = 7;
+        i=1;
+        int small;
+        small = ar[0];
+        while(i < n){
+            if(small < ar[i]){
+                small = ar[i];
+            }
+            i = i + 1;
+        }
+        Output.printInt(small);
+    }
+}
