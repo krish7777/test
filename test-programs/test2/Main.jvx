@@ -1,19 +1,8 @@
 class Main{
-	int increment(int a){
-		return a+1;
-	}
-
-	int add_two_num(int a, int b){
-		int c;
-		c=a+b;
-		return c;
-	}
-
 	void main(){
-		int var1,var2,var3,var4;
+		int var1,var2,var3;
 		var1 = 5;
 		var2 = 3;
-		var3 = add_two_num(var1, var2);
-		var4 = increment(var3);
+		var3 = var1 + var2;
 	}
 }
