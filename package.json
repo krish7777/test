@@ -1,0 +1,23 @@
+{
+  "name": "computer-system-design",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tapish2000/computer-system-design.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tapish2000/computer-system-design/issues"
+  },
+  "homepage": "https://github.com/tapish2000/computer-system-design#readme",
+  "devDependencies": {
+    "electron": "^18.3.0",
+    "electron-reloader": "^1.2.3"
+  }
+}
