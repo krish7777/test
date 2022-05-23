@@ -361,7 +361,7 @@ int main(int argc , char** argv){
 		cout<<"error: "<<strerror(errno)<<endl;
 		exit(-1);
 	}
-	fout.open(filename+".vm");
+	fout.open(argv[2]);
 	filename = findfilename(filename);
 	initialize_sym();
     yyparse();
