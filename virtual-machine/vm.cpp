@@ -665,24 +665,45 @@ int main(){
     That = ram[5];
 
     label_counter =0;
-    fout.open("test.asm");
+    fout.open("assembly.asm");
 
 
     DIR *dr;
     struct dirent *en;
     dr = opendir("."); //open all directory
+
+
     if (dr) {
         while ((en = readdir(dr)) != NULL) {
             //cout<<" \n"<<en->d_name; //print all directory name
             fu_name = en->d_name;
             string ext =  fu_name.substr ( fu_name.find(".")+1);
             file_name = fu_name.substr(0,fu_name.find("."));
+            if(ext == "vm" && file_name == "Main"){
+                //cout<<"**"<<ext<<"**"<<file_name<<endl;
+                parse();
+               // fout<<"---------------------"<<endl;
+            }
+        }
+        fout<<"---------------------"<<endl;
+        closedir(dr);
+    }
+
+    dr = opendir(".");
+    if(dr){
+        while ((en = readdir(dr)) != NULL) {
+            //cout<<" \n"<<en->d_name; //print all directory name
+            fu_name = en->d_name;
+            string ext =  fu_name.substr ( fu_name.find(".")+1);
+            file_name = fu_name.substr(0,fu_name.find("."));
+            if (file_name == "Main"){
+                continue;
+            }
             if(ext == "vm"){
                 //cout<<"**"<<ext<<"**"<<file_name<<endl;
                 parse();
                // fout<<"---------------------"<<endl;
             }
-            
         }
         closedir(dr); //close all directory
     }
