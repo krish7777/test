@@ -1,6 +1,5 @@
 .data
 string: .ascii "iittirupati" #'i', 'i', 't', 't', 'i', 'r', 'u', 'p', 'a', 't', 'i'
-newline: .ascii "\n"
 
 .text
 swap:

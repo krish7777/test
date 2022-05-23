@@ -9,7 +9,7 @@ string1 : .asciiz "xyz1"	/this is null terminated string
 		array1: .space 32	/this allocates space for label array1
 
 		.text
-main:
+Main.main:
 la $t0, array
   lw $t1, 0($t0)
 lb $t2, 0($t0)

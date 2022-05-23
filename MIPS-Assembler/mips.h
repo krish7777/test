@@ -19,7 +19,7 @@ void printhex(int x, ofstream &file)
 }
 
 // convert decimal to binary
-string decToBinary(int n) 
+string decToBinary(long int n) 
 { 
 	string str = "";
 
@@ -46,8 +46,9 @@ string decToBinary(int n)
     {
     	result += str[i];
     }
+	
 
-    return result;
+	return result;
 }
 
 string asciiToBinary(char c){
