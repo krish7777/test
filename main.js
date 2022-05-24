@@ -1,11 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
-require('electron-reloader')(module)
+require("electron-reloader")(module);
 const path = require("path");
 const {
     runCompiler,
     runVirtualMachine,
     runAssembler,
-    runAll,
+    runProcessor,
 } = require("./integration");
 
 const createWindow = () => {
@@ -19,13 +19,28 @@ const createWindow = () => {
     });
 
     mainWindow.loadFile("index.html");
-    mainWindow.webContents.openDevTools()
+    mainWindow.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
-    ipcMain.on('compiler',(event,path)=>{runCompiler(path)})
-    ipcMain.on('virtualMachine',async (event,path)=>{await runCompiler(path); runVirtualMachine()})
-    ipcMain.on('assembler',async (event,path)=>{await runCompiler(path); await runVirtualMachine(); await runAssembler()})
+    ipcMain.handle("compiler", async (event, path) => {
+        return await runCompiler(path);
+    });
+    ipcMain.handle("virtualMachine", async (event, path) => {
+        await runCompiler(path);
+        return await runVirtualMachine();
+    });
+    ipcMain.handle("assembler", async (event, path) => {
+        await runCompiler(path);
+        await runVirtualMachine();
+        return await runAssembler();
+    });
+    ipcMain.handle("processor", async (event, path) => {
+        await runCompiler(path);
+        await runVirtualMachine();
+        await runAssembler();
+        return await runProcessor();
+    });
     createWindow();
     //for mac
     app.on("activate", () => {

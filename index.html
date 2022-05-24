@@ -13,33 +13,36 @@
         <title>OS Simulator</title>
     </head>
     <body>
-        <div class="row">
-            <div id="registers" class="col"></div>
-            <div class="col">
-                <div id="ram"></div>
-                <div>
-                    <div class="m-3">
-                        <label for="filename" class="form-label"
-                            >Select File</label
-                        >
-                        <input
-                            type="file"
-                            class="form-control"
-                            id="filename"
-                        />
-                    </div>
-                    <div class="m-3">
-                        <button type="button" class="btn btn-primary" onclick="runCompiler()">Run compiler</button>
-                        <p id="compiler-output"></p>
-                        <button type="button" class="btn btn-secondary" onclick="runVirtualMachine()">Run virtual machine</button>
-                        <p id="vm-output"></p>
-                        <button type="button" class="btn btn-danger" onclick="runAssembler()" >Run assembler</button>
-                        <p id="assembler-output"></p>
-                        <button type="button" class="btn btn-success">Run the whole pipeline</button>
-                        <p id="whole-output"></p>
-                    </div>
-                </div>
-            </div>
+        <div class="m-3">
+            <label for="filename" class="form-label">Select File</label>
+            <input type="file" class="form-control" id="filename" />
+        </div>
+        <p id="whole-output"></p>
+        <div class="m-3">
+            <button
+                type="button"
+                class="btn btn-primary"
+                onclick="runCompiler()"
+            >
+                Run compiler
+            </button>
+            <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="runVirtualMachine()"
+            >
+                Run virtual machine
+            </button>
+            <button
+                type="button"
+                class="btn btn-danger"
+                onclick="runAssembler()"
+            >
+                Run assembler
+            </button>
+            <button type="button" class="btn btn-success" onclick="runAll()">
+                Run the whole pipeline
+            </button>
         </div>
 
         <script

@@ -1,25 +1,37 @@
 function getPath() {
-    let filePathSplit = document
-        .getElementById("filename")
-        .files[0].path.split("/");
-    let splitlength = filePathSplit.length - 1;
-    let path =
-        filePathSplit[splitlength - 2] +
-        "/" +
-        filePathSplit[splitlength - 1] +
-        "/" +
-        filePathSplit[splitlength];
-    return path;
+  let filePathSplit = document
+    .getElementById("filename")
+    .files[0].path.split("\\");
+  let splitlength = filePathSplit.length - 1;
+  let path =
+    filePathSplit[splitlength - 2] +
+    "/" +
+    filePathSplit[splitlength - 1] +
+    "/" +
+    filePathSplit[splitlength];
+  return path;
 }
 
-function runCompiler() {
-    window.os.compiler(getPath());
+function setOutput(path) {
+  document.getElementById("whole-output").innerText = path;
 }
 
-function runVirtualMachine() {
-    window.os.virtualMachine(getPath());
+async function runCompiler() {
+  let path = await window.os.compiler(getPath());
+  setOutput(path);
 }
 
-function runAssembler() {
-    window.os.assembler(getPath());
+async function runVirtualMachine() {
+  let path = await window.os.virtualMachine(getPath());
+  setOutput(path);
+}
+
+async function runAssembler() {
+  let path = await window.os.assembler(getPath());
+  setOutput(path);
+}
+
+async function runProcessor() {
+  let path = await window.os.processor(getPath());
+  setOutput(path);
 }

@@ -6,7 +6,7 @@ const runCompiler = async (programFile) => {
   try {
     const { stdout, stderr } = await exec(
       // `./Compiler/compiler ${programFile} ./tempLoc/tac.txt`
-      `cd compiler-code && make && ./javax ../${programFile} ../TestFiles/Main.vm `
+      `./javax ${programFile} TestFiles/Main.vm `
     );
     // console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
@@ -18,9 +18,7 @@ const runCompiler = async (programFile) => {
 
 const runVirtualMachine = async () => {
   try {
-    const { stdout, stderr } = await exec(
-      `g++ virtual-machine/vm.cpp -o Testfiles/vm && cd Testfiles && ./vm`
-    );
+    const { stdout, stderr } = await exec(`cd Testfiles && ./vm`);
     // console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
     return "TestFiles/assembly.asm";
@@ -31,7 +29,7 @@ const runVirtualMachine = async () => {
 
 const runAssembler = async () => {
   try {
-    let s = `g++ -std=c++11 MIPS-Assembler/assembler.cpp -o TestFiles/assembler.exe && ./TestFiles/assembler.exe TestFiles/assembly.asm 32-bit-MIPS-Processor/simulation/memory/instruction.mem 32-bit-MIPS-Processor/simulation/memory/data.mem`;
+    let s = `./TestFiles/assembler.exe TestFiles/assembly.asm 32-bit-MIPS-Processor/simulation/memory/instruction.mem 32-bit-MIPS-Processor/simulation/memory/data.mem`;
     const { stdout, stderr } = await exec(s);
     // console.log("stdout:", stdout);
     // console.log("stderr:", stderr);
@@ -79,4 +77,4 @@ module.exports = {
 
 // runAssembler().then((x) => console.log(x));
 
-runAll("test-programs/test1/Main.jvx").then(() => console.log("\nALL DONE\n"));
+// runAll("test-programs/test1/Main.jvx").then(() => console.log("\nALL DONE\n"));
