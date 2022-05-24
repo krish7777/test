@@ -717,7 +717,7 @@ void type6(string opname, string operand, int operand_count, int line_count, int
 
 		try
 		{
-			int x = stoi(imm);
+			long int x = stol(imm);
 		}
 		catch(const std::out_of_range& oor)
 		{
@@ -728,7 +728,7 @@ void type6(string opname, string operand, int operand_count, int line_count, int
 			return;
 		}
 
-		int imm_int = stoi(imm);
+		long int imm_int = stol(imm);
 		string imm_bin = decToBinary(imm_int);
 
 		if(opname == "li")
@@ -940,7 +940,7 @@ void type7(string opname, string operand, int operand_count, int line_count, int
 			{
 				//printhex(pc*4, file);
 				pc++;
-				file<<"0011 1100 0000 0001 0001 0000 0000 0001"<<endl;
+				file<<"00111100000000010001000000000001"<<endl;
 
 				int x = DATALABEL[lab];
 				string h;
@@ -1735,8 +1735,6 @@ void datalabel_process(string s, int line_count, int pc_counter, int* valid, ofs
 			j++;
 		}
 
-		cout << "s " << s << endl;
-		cout << "s3 " << s3 << endl;
 
 		if(s3 == ".space")
 		{
@@ -1825,6 +1823,22 @@ void datalabel_process(string s, int line_count, int pc_counter, int* valid, ofs
 				datalabels.insert(s1);
 				DATALABEL.insert(pair<string, int>(s1, address));
 				address += space;
+				if( currentWord == -1){
+					vector<string> word;
+					memory.push_back(word);
+					currentWord += 1;
+				}
+
+				for (int byte = 0; byte < space;byte++){
+					if(memory[currentWord].size()==4){
+						// word is full
+						// push new word
+						vector<string> word;
+						memory.push_back(word);
+						currentWord += 1;
+					}
+					memory[currentWord].push_back("00000000");
+				}
 			}
 			else
 			{
@@ -1843,6 +1857,22 @@ void datalabel_process(string s, int line_count, int pc_counter, int* valid, ofs
 				datalabels.insert(s1);
 				DATALABEL.insert(pair<string, int>(s1, address));
 				address += s5.size()-2;
+				for (int str_i = 1; str_i < id ; str_i++){
+					if( currentWord == -1 || memory[currentWord].size()==4){
+						vector<string> word;
+						memory.push_back(word);
+						currentWord += 1;
+					}
+
+					
+					string byte = asciiToBinary(s4[str_i]);
+					while(byte.length()<8){
+						byte = "0" + byte;
+					}
+					
+					memory[currentWord].insert(memory[currentWord].begin(), byte);
+					}
+				
 			}
 			else
 			{
@@ -1853,6 +1883,7 @@ void datalabel_process(string s, int line_count, int pc_counter, int* valid, ofs
 				return;
 			}
 		}
+	
 		else if(data == 3)//.asciiz
 		{
 			int id = s5.size()-1;
@@ -1861,6 +1892,27 @@ void datalabel_process(string s, int line_count, int pc_counter, int* valid, ofs
 				datalabels.insert(s1);
 				DATALABEL.insert(pair<string, int>(s1, address));
 				address += s5.size()-1;
+
+				for (int str_i = 1; str_i <= id; str_i++){
+
+					if( currentWord == -1 || memory[currentWord].size()==4){
+						vector<string> word;
+						memory.push_back(word);
+						currentWord += 1;
+					}
+					string byte = asciiToBinary(s4[str_i]);
+					while(byte.length()<8){
+						byte = "0" + byte;
+					}
+					if(str_i == id){
+						memory[currentWord].insert(memory[currentWord].begin(),"00000000");
+					}else{
+						memory[currentWord].insert(memory[currentWord].begin(),byte);
+					}
+
+					
+					
+				}
 			}
 			else
 			{
@@ -1895,6 +1947,25 @@ void datalabel_process(string s, int line_count, int pc_counter, int* valid, ofs
 					}
 		        }
 		        token_count++;
+
+				string binary_str = decimalToBinaryBitset(stoi(token1));
+				
+				int str_i = 0;
+				while(str_i<binary_str.length()){
+					if( currentWord == -1 || memory[currentWord].size()==4){
+						vector<string> word;
+						memory.push_back(word);
+						currentWord += 1;
+					}
+					string byte;
+					for (int str_k = 0; str_k < 8;str_k++){
+						byte += (binary_str[str_i+str_k]);
+					}
+					
+					str_i += 8;
+					memory[currentWord].push_back(byte);
+				}
+				
 		        token1 = strtok(NULL, " ,"); 
 		    }
 			int space = token_count*4;

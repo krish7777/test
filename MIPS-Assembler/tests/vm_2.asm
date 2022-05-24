@@ -302,6 +302,8 @@ li $t1, 15
 sw $t1, 3($t0)
 
 
+
+
 Array.newobj:
 li $t0, 0
 li $t1, 1
