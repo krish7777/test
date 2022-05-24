@@ -4,13 +4,13 @@
 #include <sys/types.h>
 using namespace std;
 
-typedef uint32_t i32;
+typedef int32_t i32;
 i32 sp;
 i32 Local;
 i32 Arg;
 i32 This;
 i32 That;
-stack<string> called_functions;//track of called functions
+stack<string> called_functions;
 int pc=0;
 int label_counter;
 vector<i32> ram;
@@ -27,7 +27,7 @@ class codegen
         string token_name;
         string segment ;
         string i;
-        string name;//lable name , function name
+        string name;//label name , function name
         void push_gen();
         void pop_gen();
         void add_gen();
@@ -48,20 +48,11 @@ class codegen
 };
 
 void codegen::push_gen(){
-    /*fout<<token_name<<"**********"<<endl;
-    fout<<segment<<"**********"<<endl;
-    fout<<i<<"**********"<<endl;*/
 
     if(segment == "constant"){
 
-        /*stringstream ss1; 
-        ss1 << hex << sp; 
-        string tres = ss1.str();  
-        fout<<"li $t0, "<<"0x" << tres <<endl;*/
-
-        fout<<"li $t0, "<<sp<<endl;
         fout<<"li $t1, "<<i<<endl;
-        fout<<"sw $t1, "<<"0($t0)"<<endl;
+        fout<<"sw $t1, "<<"0($sp)"<<endl;
         fout<<"li $t1,  "<<"1"<<endl;
         fout<<"add $sp, $sp, $t1" <<endl;
         sp = sp+1;
@@ -88,9 +79,6 @@ void codegen::push_gen(){
 }
 
 void codegen::pop_gen(){
-    /*fout<<token_name<<"**--*******"<<endl;
-    fout<<segment<<"*****--***"<<endl;
-    fout<<i<<"******--**"<<endl;*/
 
     if(segment == "local"){
           fout << "li $t0, " << ram[2] << endl;
@@ -105,17 +93,14 @@ void codegen::pop_gen(){
     fout << "sub $sp, $sp, $t1" << endl;
     fout << "li $t1, " <<sp<< endl;
     fout << "sw $t1, "<<i<<"($t0)" << endl;
-    // how to update values in mem address local+i
+
 }
 
-//------------------------------------arthematic operations------------------------
+//arthemetic operations
 
 void codegen::add_gen(){
-    /*fout<<token_name<<"**--*******"<<endl;
-    fout<<segment<<"*****--***"<<endl;
-    fout<<i<<"******--**"<<endl;*/
 
-    fout<<"li $t0, "<<"1"<<endl;
+    fout << "li $t0, 1" << endl;
     fout<<"sub $sp, $sp, $t0"<<endl;
     sp=sp-1;
     fout<<"lw $t1, 0($sp)"<<endl;
@@ -125,16 +110,13 @@ void codegen::add_gen(){
     fout << "add $t3, $t1, $t2" << endl;
     fout << "sw $t3, 0($sp)" << endl;
     fout << "add $sp, $sp, $t0" << endl;
-    sp= sp +1;
+    sp=sp +1;
     
 }
 
 void codegen::sub_gen(){
-    /*fout<<token_name<<"**--*******"<<endl;
-    fout<<segment<<"*****--***"<<endl;
-    fout<<i<<"******--**"<<endl;*/
 
-    fout<<"li $t0, "<<"1"<<endl;
+    fout << "li $t0, 1" << endl;
     fout<<"sub $sp, $sp, $t0"<<endl;
     sp=sp-1;
     fout<<"lw $t1, 0($sp)"<<endl;
@@ -144,32 +126,27 @@ void codegen::sub_gen(){
     fout << "sub $t3, $t1, $t2" << endl;
     fout << "sw $t3, 0($sp)" << endl;
     fout << "add $sp, $sp, $t0" << endl;
-    sp= sp +1;
+    sp=sp +1;
     
 }
 
 void codegen::neg_gen()
 {
-    /*fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
 
     fout << "li $t0, 1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
     sp = sp - 1;
     fout << "lw $t1, 0($sp)" << endl;
     fout << "li $t2, 0" << endl;
-    fout << "subu $t1, $t2, $t1" << endl;
+    fout << "sub $t1, $t2, $t1" << endl;
     fout << "sw $t1, 0($sp)" << endl;
     fout << "add $s1, $s1, $t0" << endl;
     sp++;
+
 }
 
 void codegen::not_gen()
 {
-    /*fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
 
     fout << "li $t0, 1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
@@ -179,14 +156,12 @@ void codegen::not_gen()
     fout << "sw $t2, 0($sp)" << endl;
     fout << "add $s1, $s1, $t0" << endl;
     sp++;
+
 }
 
 void codegen::or_gen() {
-    /*fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
 
-    fout << "li $t0, " << "1" << endl;
+    fout << "li $t0, 1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
     sp = sp - 1;
     fout << "lw $t1, 0($sp)" << endl;
@@ -201,11 +176,8 @@ void codegen::or_gen() {
 }
 
 void codegen::and_gen() {
-    /*fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
 
-    fout << "li $t0, " << "1" << endl;
+    fout << "li $t0, 1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
     sp = sp - 1;
     fout << "lw $t1, 0($sp)" << endl;
@@ -222,10 +194,6 @@ void codegen::and_gen() {
 void codegen::eq_gen()
 {
 
-   /* fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
-
     fout << "li $t0, 1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
     sp--;
@@ -234,8 +202,8 @@ void codegen::eq_gen()
     sp--;
     fout << "lw $t2, 0($sp)" << endl;
 
-    i32 temp_true = true;
-    i32 temp_false = false;
+    i32 temp_true = 1;
+    i32 temp_false = 0;
     int t_lb_counter_1;
     int t_lb_counter_2;
 
@@ -257,13 +225,13 @@ void codegen::eq_gen()
     fout << "sw $t3, 0($sp)" << endl;
     fout << "add $sp, $sp, $t0" << endl;
 
+    sp = sp + 1;
+
     fout <<file_name<<"label" << t_lb_counter_2 << " :" << endl;
+
 }
 
 void codegen::lt_gen(){
-    /*fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
 
     fout << "li $t0, " << "1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
@@ -272,8 +240,8 @@ void codegen::lt_gen(){
     fout << "sub $sp, $sp, $t0" << endl;
     sp = sp - 1;
     fout << "lw $t2, 0($sp)" << endl;  
-    i32 temp_true = true;
-    i32 temp_false = false;
+    i32 temp_true = 1;
+    i32 temp_false = 0;
     int t_lb_counter_1;
     int t_lb_counter_2;
     int t_lb_counter_3;
@@ -301,16 +269,12 @@ void codegen::lt_gen(){
     fout<<"li $t4, "<<temp_false<<endl;
     fout<<"sw $t4, 0($sp)"<<endl;
     fout<<"add $sp, $sp, $t0"<<endl;
-
+    sp = sp + 1;
     fout<<file_name<<"label"<<t_lb_counter_3<<":"<<endl;
-    
       
 }
 
 void codegen::gt_gen(){
-    /*fout << token_name << "**--*******" << endl;
-    fout << segment << "*****--***" << endl;
-    fout << i << "******--**" << endl;*/
 
     fout << "li $t0, " << "1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
@@ -319,8 +283,8 @@ void codegen::gt_gen(){
     fout << "sub $sp, $sp, $t0" << endl;
     sp = sp - 1;
     fout << "lw $t2, 0($sp)" << endl;  
-    i32 temp_true = true;
-    i32 temp_false = false;
+    i32 temp_true = 1;
+    i32 temp_false = 0;
     int t_lb_counter_1;
     int t_lb_counter_2;
     int t_lb_counter_3;
@@ -350,59 +314,44 @@ void codegen::gt_gen(){
     fout<<"add $sp, $sp, $t0"<<endl;
 
     fout<<file_name<<"label"<<t_lb_counter_3<<":"<<endl;     
+
 }
 
-//--------------------------unconditional branching------------------------------
+//unconditional branching
 
 void codegen::label_gen(){
-    /*cout << token_name << "**--*******" << endl;
-    cout << name << "*****--***" << endl;*/
+
     fout<<name<<":"<<endl;
 
 }
 
 void codegen::goto_gen(){
-   /*cout << token_name << "**--*******" << endl;
-    cout << name << "*****--***" << endl;*/
+
     fout<<"j "<<name<<endl;
 
 }
 
-//--------------------------conditional branching------------------------------------
+//conditional branching
 
 void codegen::ifgoto_gen(){
-    /*cout << token_name << "**--*******" << endl;
-    cout << name << "*****--***" << endl;*/
 
     fout << "li $t0, " << "1" << endl;
     fout << "sub $sp, $sp, $t0" << endl;
     sp = sp - 1;
     fout << "lw $t1, 0($sp)" << endl;
 
-    i32 temp_true = true;
+    i32 temp_true = 1;
 
     fout<<"li $t2, "<<temp_true<<endl;
     fout<<"beq $t1, $t2, "<<name<<endl;
     
 }
 
-//--------------------------function -----------------------------------------------
+//function
 
 void codegen::call_gen(){
 
-    /*cout<<token_name<<"**********"<<endl;
-    cout<<name<<"**********"<<endl;
-    cout<<i<<"**********"<<endl;*/
-
     called_functions.push(name);
-
-    /*i32 retAdd=0;
-    fout<<"li $t0, "<<sp<<endl;
-    fout<<"li $t1, "<<retAdd<<endl;
-    fout<<"sw $t1, "<<"0($t0)"<<endl;
-    fout<<"li $t1,  "<<"1"<<endl;
-    fout<<"addi $sp, $sp, $t1" <<endl;
-    sp = sp+1;*/
 
     //local
     fout<<"li $t0, "<<sp<<endl;
@@ -457,14 +406,11 @@ void codegen::call_gen(){
     ram[2] = sp ;
 
     fout<<"jal "<<name<<endl;
-   /* fout<<"j "<<name<<endl;
-    
-    //updating return address(not completed)
-    fout<<name<<"Return:"<<endl;*/
 
 }
 
 void codegen::function_gen(){
+
     cout<<token_name<<"**********"<<endl;
     cout<<name<<"**********"<<endl;
     cout<<i<<"**********"<<endl;
@@ -478,27 +424,23 @@ void codegen::function_gen(){
         fout <<"add $sp, $sp, $t1"<<endl;
         sp=sp+1;
     }
-
     
 }
 
 void codegen::return_gen(){
     fout <<"li $t1, " << "1" << endl;
 
-    //fout <<"li $t2, " << ram[1] << endl;
     i32 temp_5 = 5;
-    //fout <<"li $t3, " << temp_5 << endl;
-    //fout <<"sub $t4, $t2, $t3"<< endl;//t4 ->return address
 
     fout<<"sub $sp, $sp, $t1"<<endl;
     sp=sp-1;
-    fout<<"lw $t5, 0($sp)"<<endl;//t5->return value
+    fout<<"lw $t5, 0($sp)"<<endl;
     fout<<"li $t2, " << ram[3] << endl;
     fout<<"sw $t5, 0($t2)"<<endl;
-    fout<<"add $sp, $t2, $t1"<<endl;//sp=arg+1
+    fout<<"add $sp, $t2, $t1"<<endl;
     sp = ram[3] + 1;
 
-    fout<<"li $t2, " << ram[2]<<endl;//$t2->arg
+    fout<<"li $t2, " << ram[2]<<endl;
     temp_5 =1;
     fout<<"li $t3, " << temp_5 << endl;
     fout<<"sub $t6, $t2, $t3"<< endl;
@@ -530,12 +472,6 @@ void codegen::return_gen(){
     fout<<"li $t0, " << addr_local <<endl;
     fout<<"sw $t6, 0($t0)"<<endl;
     ram[2] = ram[2]-4;
-
-   /* //jump to the retun_address
-    string temp_n;
-    temp_n = called_functions.top();
-    called_functions.pop();
-    fout<<"j "<<temp_n<<"Return"<<endl;*/
 
     fout<<"jr $ra"<<endl;
 
@@ -670,29 +606,24 @@ int main(){
 
     DIR *dr;
     struct dirent *en;
-    dr = opendir("."); //open all directory
+    dr = opendir(".");
 
 
     if (dr) {
         while ((en = readdir(dr)) != NULL) {
-            //cout<<" \n"<<en->d_name; //print all directory name
             fu_name = en->d_name;
             string ext =  fu_name.substr ( fu_name.find(".")+1);
             file_name = fu_name.substr(0,fu_name.find("."));
             if(ext == "vm" && file_name == "Main"){
-                //cout<<"**"<<ext<<"**"<<file_name<<endl;
                 parse();
-               // fout<<"---------------------"<<endl;
             }
         }
-        //fout<<"---------------------"<<endl;
         closedir(dr);
     }
 
     dr = opendir(".");
     if(dr){
         while ((en = readdir(dr)) != NULL) {
-            //cout<<" \n"<<en->d_name; //print all directory name
             fu_name = en->d_name;
             string ext =  fu_name.substr ( fu_name.find(".")+1);
             file_name = fu_name.substr(0,fu_name.find("."));
@@ -700,12 +631,10 @@ int main(){
                 continue;
             }
             if(ext == "vm"){
-                //cout<<"**"<<ext<<"**"<<file_name<<endl;
                 parse();
-               // fout<<"---------------------"<<endl;
             }
         }
-        closedir(dr); //close all directory
+        closedir(dr);
     }
     
    
